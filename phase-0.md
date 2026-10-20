@@ -62,3 +62,17 @@ All api calls have four parts:
 A notebook is a document made of cells. There are two kinds of cells:
 - code cells: run python
 - markdown cells: hold notes and headlings that explain what you're doing
+
+
+## Editor setup
+
+## Data management
+#### Getting data: 
+- Hugging face. The higging face is like github for datasets and models. the datasets library downloads a dataset in one line and caches it in cache file, so the second time it loads instantly.
+- streaming: some datasets are huge (all of wikipedia). so streaming allows you to read row by row without downloading everything, so memory stays small.
+
+#### splits 
+there are three data splits, they include:
+- train(over 80%): the model learns from this data
+- validation (over 10%): you check progress during training
+- test (over 10%): the final exam, used only once at the end.
