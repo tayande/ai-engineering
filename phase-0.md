@@ -23,3 +23,28 @@ A docker file is said to be a file that contains the step by step procedure for 
 - A container: This is sometimes referred to as a lightweight virtual environment, and it is an isolated process using the host kernel, with its own filesystem and network.
 
 ## Data management
+
+
+## The tool interface
+The tool interface is what makes it possible for a model to ask a program to do an action that it cannot do by itself. so there are two players in the picture here:
+- the model (the llm): this is basically the chatbot you are communicating to. It is also the brain that decides what to do, and what should happen.
+- the host: The regular program around the model, if a model decides for an action, then the host is what actually does that action. it can be a python script or anything but connected to the model.
+### the tool has three parts(plus the code)
+- name: a fixed id the program can match always instead of guessing
+- description: tell the model when to use and how to use it.
+- input schema: the exact shape of the inputs of the tool, and also its outputs.
+
+### The four step loop
+All ai models or tool system works this way:
+- describe(host): The host gives the model a list of tools
+- decide(model): The model reads the user's message and picks one of three options:
+    1. answer directly in text
+    2. call a tool by producing a structured request, or
+    3. refuse.
+
+- execute(host): The host first checks the arguments match the schema.
+- Observe(model): the host gives the result back to the model, the model either writes the result as final answer or asks for another tool
+
+### pure vs. consequential tools(safety)
+pure tools only read, and they are safe to user all the time while consequential tools change something, they must be gated.
+
