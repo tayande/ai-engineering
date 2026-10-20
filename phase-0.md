@@ -76,3 +76,11 @@ there are three data splits, they include:
 - train(over 80%): the model learns from this data
 - validation (over 10%): you check progress during training
 - test (over 10%): the final exam, used only once at the end.
+
+## Terminal and shell
+
+## Debugging and profiling
+Ai engineers debug on three levels:
+- plain python
+- data/tensors
+- training behaviour
