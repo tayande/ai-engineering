@@ -48,3 +48,11 @@ All ai models or tool system works this way:
 ### pure vs. consequential tools(safety)
 pure tools only read, and they are safe to user all the time while consequential tools change something, they must be gated.
 
+
+## Apis and keys: 
+An api is how my source code talks to another program over the internet. so for ai, it means my python program will make a call to claude, chatgpt or gemini. 
+All api calls have four parts:
+- endpoints: the web address you send to.
+- api key: a secret password that proves who you are and who to bill.
+- request body: what you are asking, in json
+- response body: the reply that the external program sends back as answer to your request
