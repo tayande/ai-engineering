@@ -56,3 +56,9 @@ All api calls have four parts:
 - api key: a secret password that proves who you are and who to bill.
 - request body: what you are asking, in json
 - response body: the reply that the external program sends back as answer to your request
+
+
+## Jupyter notebooks
+A notebook is a document made of cells. There are two kinds of cells:
+- code cells: run python
+- markdown cells: hold notes and headlings that explain what you're doing
