@@ -1,3 +1,7 @@
+# Linear Algebra Intuition
+
+
+
 # VECTORS
 a vector can be defined in three different ways, depending on the context:
 - computer science: it is seen as a 1D array of list of numbers
@@ -20,5 +24,4 @@ a vector can be defined in three different ways, depending on the context:
 - A score of -1.0 means they are exact opposites
 #### how cosine similarity is computed
 it is obtained by first of all taking the dot product of two vectors, then dividing it by the multiplication of the individual magnitudes of each vector. 
-**note**
-I took some exercises in math on each of the operations in vectors
+**note** I took some exercises in math on each of the operations in vectors
