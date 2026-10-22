@@ -25,3 +25,11 @@ a vector can be defined in three different ways, depending on the context:
 #### how cosine similarity is computed
 it is obtained by first of all taking the dot product of two vectors, then dividing it by the multiplication of the individual magnitudes of each vector. 
 **note** I took some exercises in math on each of the operations in vectors
+
+# Matrices
+If a vector is a single point or line of data then a matrix is a 2d grid of numbers.
+
+## The rule of matrix multiplication
+- before multiplying two matrices (A * B), their inner dimensions must match. that is if matrix A has shape (m * n) and matrix B has shape (n * p), you can multiply them because the inner numbers (n) match. and the resulting matix C will have the outer dimensions: (m * p)
+**note** I did some exercises on matrices tool
+
