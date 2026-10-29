@@ -84,3 +84,27 @@ Ai engineers debug on three levels:
 - plain python
 - data/tensors
 - training behaviour
+
+
+
+## RECAP OF PHASE 0
+### Lesson 01: Dev environment
+This level describes the stack upon which AI can be developed which are layered on top of the previous one.
+they include: 
+- system foundation, upon which the next:
+- package managers, upon which the next:
+- language runtimes, upon which the next:
+- ai libraries are built.
+The rest of the details in the lesson explain why it is important to get each stage right for the next to exist without troubles and errors.
+
+### Lesson 02
+Git is already installed on the machines we are using so the best thing to do at this stage is not to memorize the commands to get git on a machine but to understand how it works and how to use it. It's also good to know where one's code is:  that is (i) in a working directory(files). (ii) the staging area (git add). (iii) local repo (git commit). (iv) remote / github (git push).
+***note***
+The three commands which are: git add, git commit and git push are used to save a copy of one's program remotely, and when doing this git saves each commit with a stamp of details that shows who and who is saving a particular copy of a program. And the steps to make git recognize the details it is going to associate with a particular commit are as follows:
+- `git config --global user.name "<the actual name you want the commit to bear>"`
+- `git config --global user.email "<the email you want to be associated with the commit>"`
+the above commands sets the details in it as the commit author's details. and if you want to confirm is the details set to a commit are what you intend them to be, you can run:
+- `git config --global --list`.
+***study logs***
+The commit details are saved to a file on the computer machine called ~/.gitconfig and that is why they get deleted after each logout.
+I further checked more of the commands that were listed in the lessons and also doing the exercises as well. predicting the results and getting corrections from Claude AI. 
