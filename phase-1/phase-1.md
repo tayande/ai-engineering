@@ -33,3 +33,42 @@ If a vector is a single point or line of data then a matrix is a 2d grid of numb
 - before multiplying two matrices (A * B), their inner dimensions must match. that is if matrix A has shape (m * n) and matrix B has shape (n * p), you can multiply them because the inner numbers (n) match. and the resulting matix C will have the outer dimensions: (m * p)
 **note** I did some exercises on matrices tool
 
+# Thursday: 29th october; 2026
+## RECAP OF PHASE 1
+##  PHASE 01: MATH FOUNDATIONS 
+### Lesson 01: linear algebra
+### Vectors
+A vector in code is just a python list. And a list is a collection of a group of items that are arranged together, each item can be altered, and each item is separated by a comma and the whole list is enclosed by square bracket.
+- did some examples and answered some questions about vectors
+- did code practice on the concepts as well since i did not focus more on code the last time i studied the concept.
+#### vector magnitude (The length of a vector)
+using pure math by hand, this is derived by first of all taking the exponent of the elements in the vector then adding them together then taking the square root of the resulting sum. 
+- in code, getting the square root of a number is done using the math module which i can import and use when i want to.
+### Dot product
+i also went through this one more time, this time focusing more on the code aspect and how to use it in the AI field.
+i did not really spend much time here since i have done most of this before, i then went straight to cosine similarity.
+### cosine similarity
+This is seen as the angle between two arrows (vectors). the fomular is given by:
+`cos θ = (a · b) / (|a| × |b|)`
+***note*** the cosine similarity is always between 1 and -1 and that is because cosine in general never goes beyond these range. here is a simple table depicting some of the cosine meanings of some angles:
+```python 
+Angle θ |  cos θ	|  Meaning
+0°	    |  1	    |  Pointing exactly the same way
+60°     |  0.5	    |  Fairly similar direction
+90°	    |  0        |  Perpendicular, unrelated
+180°	|  −1	    |  Exactly opposite
+```
+There is a rule that guides the lengths here: 
+- They are always positive, because when you square a negative number, it becomes positive.
+I still went futher to practice the code for it and also understand it's implementation in python as well.
+
+#### summary
+```python
+Function	| What it does
+add(a, b)	| Adds vectors position by position
+sub(a, b)	| Subtracts vectors position by position
+mag(a)	    | Length of a vector
+dot(a, b)	| Dot product
+cosine_similarity(a, b)	| Angle-based similarity, from −1 to 1
+```
+all of the above were all implemented in code as well, and pushed to my forked repo too. 
