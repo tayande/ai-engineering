@@ -72,3 +72,20 @@ dot(a, b)	| Dot product
 cosine_similarity(a, b)	| Angle-based similarity, from −1 to 1
 ```
 all of the above were all implemented in code as well, and pushed to my forked repo too. 
+
+
+### matrices
+A matrix is defined in plain mathematics as a grid of numbers arranged in rows and columns. The arrangements in the rows and columns are know as the dimension of the matrix. In vector format, a matrix is a group of vectors with another having another right on top of it. In python, a matrix is a list of lists.
+```python
+m = [[1, 2],
+     [3, 4],
+     [5, 6]]
+```
+In python, this matrix (m) can be written on one line, but so far as this convention of putting it in a list is used corrected, python would always see and treat it as a matrix.
+### reading a matrix in python
+just like a list is treated in python, you can index out a particular element in the vectors that make up a matrix. for a matrix like m, it can be written like this: `m = [[1, 2], [3, 4], [5, 6]]`
+so the following would be the elements of the matrix:
+`m[0] = [1, 2]`, `m[0][1] = 2`, `m[2][1] = 6` etc.
+### multiplying matrix by a vector
+There is a rule to adhere to when doing multiplications of matrix by vectors: 
+- The vector’s length must match the number of columns. If each row has 2 numbers, so the vector needs 2 numbers for the dot product to work.
