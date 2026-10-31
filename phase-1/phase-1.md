@@ -89,3 +89,35 @@ so the following would be the elements of the matrix:
 ### multiplying matrix by a vector
 There is a rule to adhere to when doing multiplications of matrix by vectors: 
 - The vector’s length must match the number of columns. If each row has 2 numbers, so the vector needs 2 numbers for the dot product to work.
+
+# Saturday: 31st october; 2026
+### matrix vector multiplication
+
+### linear independence, basis and rank.
+#### linear combinations
+A linear combination can be defined as some amount of one vector, plus some amount of another.
+here is a depiction of how it is done:
+`3 × [1, 0]  +  4 × [0, 1]  =  [3, 4]`
+
+#### span: everywhere you can reach
+The span of some vectors is seen to be every point you can reach using linear combinations of them.
+here is a picture of it:
+`With [1, 0] and [0, 1] you can reach any point on the 2D plane: [x, y] = x·[1,0] + y·[0,1]. Their span is the whole plane`
+
+#### linear independence
+Trying` [1, 2]` and `[2, 4]`. You will notice that `[2, 4] = 2 × [1, 2]`. It points in the same direction, so it adds no new reach. Together they still only span a line.
+This is a little bit complicated, but it is an occurrence that happens when a vector can be built from others.
+When one vector can be built from the others, they’re linearly dependent, at least one is redundant. However, if none can be built from the others, they’re linearly independent. Each adds a new direction
+In 2D, two vectors are dependent exactly when one is a multiple of the other, which means they lie on the same line.
+
+#### Basis: the minimum set of building blocks
+A basis is defined as a set of vectors that:
+- can reach everything (spans the space), and
+- has no redundant vectors (is linearly independent)
+
+`[1, 0]` and `[0, 1]` are the standard basis for 2D, but `[1, 1]` and `[1, −1]` are a basis too. Any two vectors that don’t lie on the same line work. 2D always needs exactly 2 basis vectors, and 3D needs exactly 3. That number is the dimension.
+
+#### Rank: how many dimensions a matrix really uses
+The rank of a matrix is seen as the number of independent columns it has, which tells us how many dimensions its outputs can actually fill.
+
+Rank matters because a rank-deficient matrix loses information: once points are squashed onto a line, you can’t tell where they started. In AI, rank also explains a popular technique called LoRA that i will be diving into very soon, which fine-tunes huge models by adding small low-rank matrices instead of changing everything.
