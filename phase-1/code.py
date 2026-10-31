@@ -87,3 +87,25 @@ def cosine_similarity(a: list, b: list):
 print(cosine_similarity([1, 1], [-1, -1]))
 print(cosine_similarity([3, 4], [6, 8]))
 print(cosine_similarity([2, 3], [4, 1]))
+
+
+# matrix vector multiplication
+def dot(a: list, b: list):
+    if a == [] or b == []:
+        return f"cannot use an empty list"
+
+    result = 0
+    for i in range(len(a)):
+        result += a[i] * b[i]
+
+    return result
+
+def matvec(m: list, v: list):
+    result = []
+    for i in range(len(m)):
+        result.append(dot(m[i], v))
+
+    return result
+
+print(matvec([[2, 0], [0, 2]], [3, 4]))
+print(matvec([[1, 2], [3, 4], [5, 6]], [10, 20]))
