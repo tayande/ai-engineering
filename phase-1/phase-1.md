@@ -121,3 +121,43 @@ A basis is defined as a set of vectors that:
 The rank of a matrix is seen as the number of independent columns it has, which tells us how many dimensions its outputs can actually fill.
 
 Rank matters because a rank-deficient matrix loses information: once points are squashed onto a line, you can’t tell where they started. In AI, rank also explains a popular technique called LoRA that i will be diving into very soon, which fine-tunes huge models by adding small low-rank matrices instead of changing everything.
+
+# Sunday: 1st November; 2026
+# lesson 2
+## Matrix Transformations & Eigenvalues.
+### A matrix as a transformation
+In lesson 2 we were more focused on the multiplication of matrices and vectors. Here we are looking at what that multiplication does. A 2×2 matrix takes every point in the plane and moves it somewhere else. The whole plane gets stretched, rotated, flipped, or squashed, and the matrix is the rule for those moves.
+The key trick here is that the columns of a matrix show where the basis vectors land. In more clear terms, In 2D the basis vectors are `x̂ = [1, 0]` and `ŷ = [0, 1]`. If a matrix is `[[a, b], [c, d]]`, then x̂ lands at `[a, c]` and ŷ lands at `[b, d]`. Every other point follows, because every vector is some mix of x̂ and ŷ.
+### The common transformations
+- Scaling: [[2, 0], [0, 3]] stretches x by 2 and y by 3.
+- Rotation by θ: [[cos θ, -sin θ], [sin θ, cos θ]] spins everything around the origin and preserves lengths.
+- Reflection: [[1, 0], [0, -1]] flips across the x-axis.
+- Shear: [[1, k], [0, 1]] slants the plane, like pushing the top of a deck of cards sideways.
+- Projection: [[1, 0], [0, 0]] flattens everything onto a line, so information is lost.
+### Composing transformations
+Applying transformation A and then B equals multiplying by the single matrix BA, and the order matters. Rotate-then-scale is different from scale-then-rotate. This is why matrix multiplication isn’t commutative, and a neural network is a chain of such transformations. this means that transformation A and B is BA. keeping in mind that AB is not the same as BA.
+### The determinant
+The determinant of a matrix measures how much a transformation scales area. For `[[a, b], [c, d]]` it is ad - bc.
+- det = 2 means areas double.
+- det = 1 means area is preserved, as in a rotation.
+- det < 0 means the plane is flipped.
+- det = 0 means the plane is squashed onto a line or point. The matrix is singular, it loses information, and it can’t be inverted.
+### The inverse
+The inverse matrix A⁻¹ undoes A, so A⁻¹A = I. It exists only when det ≠ 0.
+### Eigenvectors and eigenvalues
+This is the main idea of the lesson. When a matrix transforms the plane, most vectors change direction. But some special vectors stay on their own line, and they only get stretched or shrunk. These are eigenvectors, and the stretch factor is the eigenvalue:
+`A v = λ v`
+Here A is the matrix, v is the eigenvector, and λ is the eigenvalue. Think of the eigenvectors as the “natural axes” of a transformation.
+here are some of the meanings for different values of eigenvalue: 
+- λ = 2 means the vector is stretched to twice its length.
+- λ = 1 means it is unchanged.
+- λ = 0 means it is crushed to nothing.
+- λ < 0 means it is flipped.
+How to find them: rearrange to `(A - λI)v = 0`. A non-zero v exists only when `det(A - λI) = 0`. This gives the characteristic equation, whose roots are the eigenvalues. Then plug each λ back in to find its eigenvector.
+Here is a worked example: for A = `[[2, 0], [0, 3]]` the eigenvalues are 2 and 3, with eigenvectors along the x-axis and y-axis. For a pure rotation in 2D there are no real eigenvectors, because every direction changes.
+### Why this matters for AI
+- PCA (dimensionality reduction) uses the eigenvectors of the data’s covariance matrix, which point along the directions of most variation.
+- Training stability: eigenvalues of the matrices in a network affect whether signals and gradients explode or vanish.
+- Google’s original PageRank was an eigenvector problem.
+- SVD, coming later in this phase, generalizes the same idea.
+### Understanding check
