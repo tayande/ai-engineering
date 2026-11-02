@@ -161,3 +161,43 @@ Here is a worked example: for A = `[[2, 0], [0, 3]]` the eigenvalues are 2 and 3
 - Google’s original PageRank was an eigenvector problem.
 - SVD, coming later in this phase, generalizes the same idea.
 ### Understanding check
+
+# Monday: 2nd november; 2026
+## Lesson 4: Calculus for ML: Derivatives & Gradients.
+### The big idea: how does the output change when I nudge the input?
+Machine learning is considered to be mostly one loop: make a prediction, measure how wrong it is (the loss), then adjust the model’s numbers to make the loss smaller. And that is where Calculus comes in, it tells us which direction to adjust and by how much.
+### The derivative: the slope at a point
+For a function f(x), the derivative f'(x) answers: if I nudge x a tiny bit, how much does f change? It is the slope of the curve at that point.
+The definition uses a tiny step h:
+`f'(x) ≈ (f(x + h) - f(x)) / h, as h → 0`
+Example: f(x) = x². At x = 3, nudging x by 0.001 gives f = 9.006001, a change of about 0.006 for a step of 0.001. The slope is about 6, and that matches the rule f'(x) = 2x.
+***What the sign and size tell you:***
+- Positive slope: increasing x increases f.
+- Negative slope: increasing x decreases f.
+- Zero slope: a flat spot, which could be a minimum, a maximum, or a plateau.
+### Rules you’ll use constantly
+- Power rule: d/dx xⁿ = n·xⁿ⁻¹
+- Constant multiple: d/dx [c·f] = c·f’
+- Sum rule: the derivative of f + g is f’ + g’
+- Product rule: (f·g)’ = f’g + fg’
+- Chain rule (next lesson): for compositions like f(g(x)). It is what makes backpropagation work.
+- Handy ones: d/dx eˣ = eˣ, d/dx ln x = 1/x, and the derivative of the sigmoid σ(x) is σ(x)(1 - σ(x)).
+### Partial derivatives: many inputs
+Real models have thousands or millions of parameters. For f(x, y) = x² + 3y, a partial derivative measures the change from nudging one input while holding the others fixed:
+`∂f/∂x = 2x`
+`∂f/∂y = 3`
+### The gradient: all partials in one vector
+The gradient stacks the partial derivatives into a vector:
+`∇f = [∂f/∂x, ∂f/∂y, …]`
+This ties back to Phase 1: the gradient is a vector, and it points in the direction of steepest increase of f. Its length says how steep that is. So the negative gradient points in the direction of steepest decrease.
+### Gradient descent: the engine of ML
+To minimize a loss, repeat:
+`θ ← θ - α · ∇L(θ)`
+Here θ is the parameters, ∇L is the gradient of the loss, and α is the learning rate, the step size. Imagine standing on a foggy hillside and always stepping downhill.
+- α too small: you move painfully slowly.
+- α too large: you overshoot the valley and bounce around or diverge.
+- Non-convex losses: you can get stuck in local minima or flat saddle points, which is a real concern in deep learning.
+### Checking your math: numerical gradients
+Analytic derivatives are easy to get wrong, so we can check them with the nudge idea: compute (f(x + h) - f(x - h)) / 2h for each parameter and compare it to the formula. This is called gradient checking, and it’s a standard debugging tool when building neural networks.
+### Why this matters for AI
+Training any neural network is gradient descent on a loss function. Everything coming next, the chain rule, autodiff, and backpropagation, is about computing these gradients efficiently.
