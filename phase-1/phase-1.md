@@ -201,3 +201,32 @@ Here θ is the parameters, ∇L is the gradient of the loss, and α is the learn
 Analytic derivatives are easy to get wrong, so we can check them with the nudge idea: compute (f(x + h) - f(x - h)) / 2h for each parameter and compare it to the formula. This is called gradient checking, and it’s a standard debugging tool when building neural networks.
 ### Why this matters for AI
 Training any neural network is gradient descent on a loss function. Everything coming next, the chain rule, autodiff, and backpropagation, is about computing these gradients efficiently.
+
+# Thursday: 5th november; 2026
+## The chain rule
+
+Quick refresher: a derivative is a rate of change: how much the output moves when you nudge the input a little. You’ve used it as velocity = dx/dt. A few you’ll need:
+
+f(x)  |	f′(x)
+xⁿ	 | n·xⁿ⁻¹
+sin x| cos x
+eˣ	| eˣ
+a·x (a constant) | a
+
+
+The problem: a neural network isn’t one simple function. It’s functions inside functions inside functions. How do you find the derivative of something like y = sin(x²)?
+
+The problem: a neural network isn’t one simple function. It’s functions inside functions inside functions. How do you find the derivative of something like y = sin(x²)?
+The chain rule: if y = f(g(x)), then
+`dy/dx = f′(g(x)) × g′(x)`
+
+In words: differentiate the outside function (leaving the inside alone), then multiply by the derivative of the inside. Each link in the chain contributes its own local rate, and you multiply them together.
+Worked example: y = sin(x²)
+`Inside: g = x², so g′ = 2x`
+`Outside: f = sin(g), so f′ = cos(g) = cos(x²)`
+`Multiply: dy/dx = cos(x²) × 2x`
+
+An intuition from physics: if a car’s position depends on time, and fuel used depends on position, then the fuel rate per second = (fuel per metre) × (metres per second). Rates multiply along a chain.
+Longer chains work the same way, one factor per link:
+`y = f(g(h(x)))   →   dy/dx = f′(g(h(x))) × g′(h(x)) × h′(x)`
+Why AI cares: every layer of a neural network is one link in this chain. To train it, you need to know how the final error changes when you nudge each weight, and the chain rule is exactly how that’s calculated. This algorithm is called backpropagation.
