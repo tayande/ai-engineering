@@ -230,3 +230,26 @@ An intuition from physics: if a car’s position depends on time, and fuel used 
 Longer chains work the same way, one factor per link:
 `y = f(g(h(x)))   →   dy/dx = f′(g(h(x))) × g′(h(x)) × h′(x)`
 Why AI cares: every layer of a neural network is one link in this chain. To train it, you need to know how the final error changes when you nudge each weight, and the chain rule is exactly how that’s calculated. This algorithm is called backpropagation.
+
+
+# Tuesday: 10th November; 2026
+## Computational graphs
+To let a computer apply the chain rule automatically, we first break any calculation into small steps, one basic operation each (add, multiply, square, and so on). Drawing those steps as a diagram gives a computational graph.
+- Each node is a value, either an input or the result of one operation.
+- Each edge shows which values feed into which operation.
+Example: `f = (x + y) · z`, with `x = 2, y = 3, z = 4.`
+```python
+x ──┐
+    (+) ── q ──┐
+y ──┘          (×) ── f
+z ─────────────┘
+```
+Running it left to right is the forward pass:
+- `q = x + y = 5`
+- `f = q · z = 20`
+Each operation is simple enough that its own derivative is easy. These are the local derivatives, which only look at that one node:
+- `For q = x + y: ∂q/∂x = 1 and ∂q/∂y = 1`
+- `For f = q · z: ∂f/∂q = z = 4 and ∂f/∂z = q = 5`
+
+Local derivatives are cheap because each node only has to know its own operation. Nobody has to differentiate the whole expression at once. The chain rule from Topic 1 then says: to get the derivative of f with respect to any input, multiply the local derivatives along the path from that input to f. Doing this systematically is the next topic.
+An autograd engine like the Value class you’ll build records exactly this graph as the forward pass runs, so each value remembers which operation made it and which values it came from.
