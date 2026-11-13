@@ -253,3 +253,37 @@ Each operation is simple enough that its own derivative is easy. These are the l
 
 Local derivatives are cheap because each node only has to know its own operation. Nobody has to differentiate the whole expression at once. The chain rule from Topic 1 then says: to get the derivative of f with respect to any input, multiply the local derivatives along the path from that input to f. Doing this systematically is the next topic.
 An autograd engine like the Value class you’ll build records exactly this graph as the forward pass runs, so each value remembers which operation made it and which values it came from.
+
+
+# Friday: 13th November; 2026.
+## Lesson 1.06: probability and distribution
+### Why ai cares about probability
+All predictions a model makes is are a probability distribution. A classifier says “91% cat, 6% dog, 3% bird”, and a language model picks the next word from thousands of options, each with a probability. Training is about making those predicted probabilities match reality.
+### Basic probability rules
+Sample space and events:
+- The sample space S is the set of all possible outcomes. For one die roll, S = {1, 2, 3, 4, 5, 6}.
+- An event is a group of outcomes you care about. “Rolling an even number” is the event {2, 4, 6}.
+- When all outcomes are equally likely:
+```python
+P(event) = (number of outcomes in the event) ÷ (total number of outcomes)
+P(even) = 3/6 = 0.5
+```
+#### The three rules everything is built on
+- A probability is never negative.
+- Something always happens: P(S) = 1.
+- If A and B can’t both happen, then P(A or B) = P(A) + P(B).
+#### Two useful consequences:
+- “Not”: P(not A) = 1 − P(A). The chance of not rolling a 6 is 1 − 1/6 = 5/6.
+- “Or” when they can overlap: P(A or B) = P(A) + P(B) − P(A and B). You subtract the overlap so it isn’t counted twice.
+#### Conditional probability: “given that…”
+P(A | B) means “the probability of A, given that B has happened.” You narrow your world down to just B:
+`P(A | B) = P(A and B) ÷ P(B)`
+Example (a deck of 52 cards): what’s the chance a card is a King, given that it’s a face card (J, Q or K)?
+- There are 12 face cards, 4 of them Kings.
+- P(King | Face) = (4/52) ÷ (12/52) = 4/12 = 1/3
+Knowing “it’s a face card” changed the chance of a King from 4/52 (about 8%) to 1/3 (about 33%).
+#### Independence
+Two events are independent if knowing one tells you nothing about the other. Then:
+`P(A and B) = P(A) × P(B)`
+- Two coin flips are independent: the first doesn’t affect the second.
+- Drawing two cards without putting the first back is not independent: the first draw changes what’s left in the deck.
