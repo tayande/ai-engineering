@@ -287,3 +287,38 @@ Two events are independent if knowing one tells you nothing about the other. The
 `P(A and B) = P(A) × P(B)`
 - Two coin flips are independent: the first doesn’t affect the second.
 - Drawing two cards without putting the first back is not independent: the first draw changes what’s left in the deck.
+
+# unday: 15th November; 2026
+## Random variables, PMF vs PDF, and common distributions
+### What is a random variable?
+A random variable (written with a capital letter, like X) is a number whose value depends on a random outcome.
+- Roll a die: X = the number that comes up (1 to 6)
+- Flip a coin: X = 1 for heads, 0 for tails
+- Measure someone’s height: X = the height in cm
+The point is to turn outcomes into numbers, so we can do maths with them: averages, spreads, and so on. There are two kinds:
+- Discrete: which can take separate and countable values. eg include: die roll, number of emails per hour, which class an image belongs to.
+- Continuous: Which can take any value in a range. eg include: height, temperature, time and a model's weights.
+### PMF: probabilities for discrete variables
+A probability mass function (PMF) gives the probability of each exact value: P(X = k).
+For a fair die, two rules always hold and they include: 1. Every probability is between 0 and 1, and 2. They all add up to 1.
+### PDF: density for continuous variables
+For a continuous variable, the chance of hitting one exact value is zero. The probability that someone is exactly 170.000000… cm tall is 0. So instead we use a probability density function (PDF), f(x), and get probabilities from areas under its curve: `P(a ≤ X ≤ b) = area under f(x) between a and b`
+A physics analogy: think of a rod with a mass density in kg/m. The density at a single point isn’t a mass; you only get mass by integrating over a length. Probability density works the same way. That’s also why a density value can be greater than 1, while the total area under the curve must equal 1.
+### The five common distributions
+A distribution is just a particular pattern of probabilities. These five come up constantly:
+- Bernoulli: This models one yes/no trial with success chance p. It is given by `P(1) = p, P(0) = 1 − p`. It is used in AI for binary classification.
+- Categorical: This models one trial with k possible outcomes. it is given by `P(X = i) = pᵢ, all pᵢ add to 1`. It is used in AI for multi-class classification.
+- Uniform: This models all outcomes equally likely. it is given by `Continuous on [a, b]: f(x) = 1/(b − a)`. It is used in AI for random initial weights.
+- Normal (Gaussian): This models the bell curve, centred at mean `μ` with spread `σ`. It is given by `f(x) = (1/(σ√(2π))) · e^(−(x−μ)²/(2σ²))`. it is used in AI for weight initialization, noise and errors.
+- Poisson: This models How many rare events happen in a fixed interval, at average rate `λ`. it is given by `P(X = k) = λᵏ e^(−λ) / k!`. it is used in ai for counting events.
+You may know Poisson from radiation physics: the number of decays a detector counts per second follows a Poisson distribution.
+A rule of thumb for the normal distribution:
+- about 68% of values fall within 1σ of the mean
+- about 95% within 2σ
+- about 99.7% within 3σ
+### Quick worked examples:
+- Bernoulli: a model says an email is spam with p = 0.8. Then P(spam) = 0.8 and P(not spam) = 0.2.
+- Poisson: a server gets on average λ = 2 requests per second. What’s the chance of exactly 0 requests in a second?
+`P(X = 0) = 2⁰ × e⁻² / 0! = 1 × 0.135 / 1 ≈ 0.135`
+(Remember 0! = 1 and anything⁰ = 1.)
+- Uniform: for a weight drawn uniformly between −1 and 1, the density is f(x) = 1/(1 − (−1)) = 0.5 everywhere in that range.
