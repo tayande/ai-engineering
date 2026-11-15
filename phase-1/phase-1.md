@@ -288,7 +288,7 @@ Two events are independent if knowing one tells you nothing about the other. The
 - Two coin flips are independent: the first doesn’t affect the second.
 - Drawing two cards without putting the first back is not independent: the first draw changes what’s left in the deck.
 
-# unday: 15th November; 2026
+# Sunday: 15th November; 2026
 ## Random variables, PMF vs PDF, and common distributions
 ### What is a random variable?
 A random variable (written with a capital letter, like X) is a number whose value depends on a random outcome.
