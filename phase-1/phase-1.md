@@ -322,3 +322,45 @@ A rule of thumb for the normal distribution:
 `P(X = 0) = 2⁰ × e⁻² / 0! = 1 × 0.135 / 1 ≈ 0.135`
 (Remember 0! = 1 and anything⁰ = 1.)
 - Uniform: for a weight drawn uniformly between −1 and 1, the density is f(x) = 1/(1 − (−1)) = 0.5 everywhere in that range.
+
+# Monday. 16th November; 2026.
+## Expected value and variance
+These are the two numbers that summarise any distribution: where its centre is and how spread out it is.
+### Expected value: the weighted average
+The expected value E[X] (also called the mean, μ) is the average result you’d get if you repeated the experiment many, many times. For a discrete variable, multiply each value by its probability, then add them up:
+`E[X] = Σ xᵢ × P(xᵢ)`
+Example: a fair die
+`E[X] = 1×(1/6) + 2×(1/6) + 3×(1/6) + 4×(1/6) + 5×(1/6) + 6×(1/6)
+     = 21/6 = 3.5`
+     
+You can never actually roll a 3.5. The expected value is the long-run average, not a value you’ll necessarily see.
+Physics link: this is exactly the centre of mass formula, x̄ = Σ mᵢxᵢ / Σ mᵢ, with probabilities as the masses. Since probabilities add up to 1, there’s nothing to divide by. The expected value is the balance point of the distribution. Example: unequal probabilities. A game pays ₦100 with probability 0.2, and ₦0 with probability 0.8:
+`E[X] = 100 × 0.2 + 0 × 0.8 = ₦20`
+On average you’d win ₦20 per game, so paying more than ₦20 to play would lose money in the long run.
+### Variance
+This is the average squared distance from the mean. Two distributions can have the same mean but very different spreads:
+- Always getting 50 has mean 50.
+- Getting 0 or 100 with a coin flip also has mean 50.
+Variance measures that spread: the average of the squared distances from the mean.
+`Var(X) = E[(X − μ)²] = Σ (xᵢ − μ)² × P(xᵢ)`
+There’s also a shortcut that’s often quicker:
+`Var(X) = E[X²] − (E[X])²`
+Standard deviation σ = √Var(X). It’s in the same units as X, so it’s easier to interpret than variance.
+Why square the distances? Without squaring, distances above and below the mean would cancel out and always add up to zero. Squaring makes every distance positive, and it penalises big deviations more than small ones.
+Example: the 0-or-100 coin game (mean 50)
+`Var = (0 − 50)² × 0.5 + (100 − 50)² × 0.5
+    = 2500 × 0.5 + 2500 × 0.5 = 2500
+σ = √2500 = 50`
+For “always 50,” the variance is 0: there’s no spread at all.
+Physics link: variance is the moment of inertia about the centre of mass, Σ mᵢ(xᵢ − x̄)². Mass far from the centre counts more, just like outcomes far from the mean.
+### Formulas for the common distributions
+- Bernoulli (p)-0. With mean `p` and variance `p(1 − p)`
+- Poisson (λ). With mean `λ` and variance `λ`
+- Uniform on [a, b]. With mean `(a + b)/2` and variance `(b − a)²/12`
+- Normal (μ, σ). With mean `μ` and variance `σ²`
+Notice that Bernoulli’s variance p(1 − p) is largest at p = 0.5, when the result is most uncertain, and zero at p = 0 or 1. You’ll recognise Poisson’s “mean = variance” from counting statistics in radiation physics: the √N uncertainty on N counts.
+### Why this matters in the field of AI engineering.
+- The loss function is an expected value. Training minimises the average error over all the data.
+- Variance shows stability. If the gradients vary a lot from batch to batch, training is noisy and jumpy. Many techniques (bigger batches, momentum, Adam) exist to reduce that variance.
+- Weight initialisation sets the variance of the starting weights carefully. Too large and the signals explode through the layers; too small and they fade away.
+- Normalisation layers (like batch norm) rescale data to mean 0 and variance 1.
