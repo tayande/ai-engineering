@@ -364,3 +364,40 @@ Notice that Bernoulli’s variance p(1 − p) is largest at p = 0.5, when the re
 - Variance shows stability. If the gradients vary a lot from batch to batch, training is noisy and jumpy. Many techniques (bigger batches, momentum, Adam) exist to reduce that variance.
 - Weight initialisation sets the variance of the starting weights carefully. Too large and the signals explode through the layers; too small and they fade away.
 - Normalisation layers (like batch norm) rescale data to mean 0 and variance 1.
+
+
+# Tuesday. 17th November; 2026
+## Joint and marginal distributions
+So far we’ve looked at one random variable at a time. In real data, things come in pairs or groups: weather and whether people carry umbrellas, a patient’s age and their dose, an email’s words and whether it’s spam. A joint distribution describes two variables together.
+### The joint distribution
+P(X, Y) gives the probability of each combination of values. With two variables, it’s easiest to show as a table.
+Example: X = weather, Y = whether someone carries an umbrella.
+	        | No umbrella (Y=0)	    | Umbrella (Y=1)
+Sun (X=0)	| 0.40	                | 0.10
+Rain (X=1)	| 0.05	                | 0.45
+Each cell is the probability of that pair. For example, P(Rain and Umbrella) = 0.45. All four cells together add up to 1.
+### Marginal distributions
+“sum out” the other variable
+Often you want the probability of just one variable, ignoring the other. You get it by adding across a row or down a column:
+`P(X = x) = Σ over all y of P(X = x, Y = y)`
+	        | No umbrella	| Umbrella	| P(weather)
+Sun	        | 0.40	        | 0.10	    | 0.50
+Rain	    | 0.05	        | 0.45	    | 0.50
+P(umbrella)	| 0.45	0.55	| 1.00
+- P(Rain) = 0.05 + 0.45 = 0.50
+- P(Umbrella) = 0.10 + 0.45 = 0.55
+They’re called marginal because they’re literally written in the margins of the table.
+### Conditional probability from the table
+This connects back to Step 1. To find P(Umbrella | Rain), narrow your world down to the Rain row and divide by that row’s total:
+`P(Umbrella | Rain) = P(Rain and Umbrella) ÷ P(Rain) = 0.45 ÷ 0.50 = 0.90`
+So 90% of people carry an umbrella when it rains, but only 0.10 ÷ 0.50 = 20% do when it’s sunny.
+### Checking independence
+From Step 1: X and Y are independent if `P(X and Y) = P(X) × P(Y)` for every cell.
+Check one cell: `P(Rain and Umbrella) = 0.45, but P(Rain) × P(Umbrella) = 0.50 × 0.55 = 0.275`.
+They’re not equal, so weather and umbrellas are not independent. That makes sense: knowing it’s raining tells you a lot about umbrellas.
+If they were independent, every cell would just be “row total × column total,” and knowing the weather would tell you nothing about umbrellas.
+### Why it matters to AI
+- A dataset is a joint distribution. Training data pairs inputs with labels, P(image, label). A model learns how they relate.
+- Prediction is conditional probability. A classifier estimates P(label | input): “given this image, how likely is each class?”
+- Marginals appear when you “average out” what you don’t know, which is central to Bayes’ theorem in Lesson 1.07 and to generative models later.
+- Naive Bayes (Lesson 1.07) works by assuming features are independent so it can just multiply probabilities, even though that’s rarely exactly true.
