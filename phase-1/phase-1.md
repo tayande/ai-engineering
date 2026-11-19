@@ -401,3 +401,35 @@ If they were independent, every cell would just be “row total × column total,
 - Prediction is conditional probability. A classifier estimates P(label | input): “given this image, how likely is each class?”
 - Marginals appear when you “average out” what you don’t know, which is central to Bayes’ theorem in Lesson 1.07 and to generative models later.
 - Naive Bayes (Lesson 1.07) works by assuming features are independent so it can just multiply probabilities, even though that’s rarely exactly true.
+
+
+# Thursday: 19th November; 2026
+## The normal distribution and the Central Limit Theorem
+### The normal distribution (bell curve)
+What matters in this context most is its shape and its two settings:
+- μ (mean): where the centre of the bell is
+- σ (standard deviation): how wide the bell is
+It’s symmetric around μ, most values sit near the middle, and values far from the middle become rare very quickly.
+*** The 68–95–99.7 rule:***
+Range	| Share of values inside it
+μ ± 1σ	| about 68%
+μ ± 2σ	| about 95%
+μ ± 3σ	| about 99.7%
+Example: adult heights with μ = 170 cm and σ = 10 cm. About 95% of people are between 150 and 190 cm, and someone over 200 cm (3σ above the mean) is in the top 0.15%.
+*** The standard normal *** has μ = 0 and σ = 1. Any normal value can be converted to it with a z-score:
+`z = (x − μ) / σ`
+The z-score tells you how many standard deviations a value is from the mean. A height of 185 cm gives z = (185 − 170)/10 = 1.5.
+### The Central Limit Theorem (CLT)
+This is the reason the normal distribution shows up everywhere: 
+If you add up or average many independent random values, the result is approximately normal, whatever the shape of the original distribution (as long as its variance is finite).
+Example with dice:
+- 1 die: flat. Each number from 1 to 6 is equally likely.
+- Average of 2 dice: a triangle. Middle values like 3.5 are more likely, because there are more ways to make them.
+- Average of 30 dice: almost a perfect bell curve centred at 3.5.
+Each die is flat, but their average is a bell. The more values you average, the closer to normal it gets, and the narrower it becomes: the spread of the average shrinks like σ/√n.
+*** Physics link: *** this is why measurement errors are usually normal. Each reading is affected by many small independent disturbances (temperature, electronics noise, vibration), and their combined effect is a bell curve. It’s also why repeating a measurement n times shrinks the uncertainty of the average by √n.
+### Why this matters to AI:
+- Weight initialisation: network weights usually start as small random values from a normal distribution.
+- Noisy gradients: in training, each batch’s gradient is an average over many examples, so by the CLT the noise in it is roughly normal.
+- Normalisation: data is often converted to z-scores (mean 0, standard deviation 1) so all features are on the same scale.
+- Generative models: diffusion models start from pure normal noise and turn it step by step into an image.
