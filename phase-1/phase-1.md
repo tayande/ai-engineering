@@ -433,3 +433,62 @@ Each die is flat, but their average is a bell. The more values you average, the 
 - Noisy gradients: in training, each batch’s gradient is an average over many examples, so by the CLT the noise in it is roughly normal.
 - Normalisation: data is often converted to z-scores (mean 0, standard deviation 1) so all features are on the same scale.
 - Generative models: diffusion models start from pure normal noise and turn it step by step into an image.
+
+
+# Friday 20th November; 2026
+## log probabilities.
+
+### The problem: multiplying tiny numbers
+Many AI calculations multiply lots of probabilities together. For example, a language model scores a sentence by multiplying the probability of each word:
+`P(sentence) = P(word 1) × P(word 2) × P(word 3) × …
+            = 0.01 × 0.003 × 0.02 × …`
+Each probability is small, so the product shrinks very fast. After a few hundred words, the true answer is so tiny that the computer can’t store it and rounds it to exactly 0. This is called underflow. Once it’s 0, you can’t compare sentences anymore: every long sentence looks equally “impossible.”
+You can see it in Python:
+`
+p = 1.0
+for i in range(400):
+    p *= 0.01
+print(p)    # prints 0.0, the real answer is 10^-800
+`
+### The fix: use logarithms
+Logs turn multiplication into addition:
+`log(a × b) = log(a) + log(b)`
+So instead of multiplying probabilities, we add their logs:
+`
+So instead of multiplying probabilities, we add their logs:
+`
+Adding numbers like −4.6 never underflows. A 400-word sentence just gives a large negative number like −1842, which the computer handles easily.
+```python
+import math
+log_p = 0.0
+for i in range(400):
+    log_p += math.log(0.01)
+print(log_p)    # about -1842.07, no underflow
+```
+(In AI, “log” usually means the natural log, ln.)
+### What log probabilities look like
+Probability	    | Log probability (ln)
+1.0 (certain)	| 0
+0.5	            | −0.69
+0.1         	| −2.30
+0.01	        | −4.61
+close to 0	    | very negative
+Three things to remember:
+- Since probabilities are between 0 and 1, log probabilities are always ≤ 0.
+- Closer to 0 means more likely; more negative means less likely.
+- Logs keep the order: if P(A) > P(B), then log P(A) > log P(B). So you can compare or maximise log probabilities instead of probabilities and get the same answer.
+### The link to the loss function
+When training, we want the model to give high probability to the correct answers. Taking logs, that means making the log probability as high as possible. Training tools prefer to minimise a number, so we flip the sign:
+`loss = −log P(correct answer)`
+This is called the negative log-likelihood, and it’s the same thing as the cross-entropy loss you saw in Lesson 1.09’s report:
+Model’s probability for the correct class	| Loss = −ln(p)
+0.9 (confident and right)	                | 0.11 (small)
+0.5 (unsure)	                            | 0.69
+0.1 (confident and wrong)	                | 2.30 (large)
+0.01	                                    | 4.61 (very large)
+The loss grows sharply as the probability of the right answer approaches 0, so confident wrong answers are punished heavily. That’s exactly what we want a model to learn from.
+### why this matters to ai:
+- Language models add up log probabilities of tokens instead of multiplying probabilities.
+- Every classifier and LLM is trained by minimising −log P(correct answer), i.e. cross-entropy.
+- Naive Bayes (Lesson 1.07) adds log probabilities of words so long emails don’t underflow.
+- PyTorch has log_softmax built in for this reason, which is where Step 7 picks up.
