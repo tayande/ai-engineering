@@ -492,3 +492,59 @@ The loss grows sharply as the probability of the right answer approaches 0, so c
 - Every classifier and LLM is trained by minimising −log P(correct answer), i.e. cross-entropy.
 - Naive Bayes (Lesson 1.07) adds log probabilities of words so long emails don’t underflow.
 - PyTorch has log_softmax built in for this reason, which is where Step 7 picks up.
+
+# Saturday, 21st November; 2026
+## Softmax: turning scores into probabilities
+### The problem
+At the end of a classifier, the network produces one raw number per class, called a logit (or score):
+`cat: 2.0    dog: 1.0    bird: 0.1`
+These aren’t probabilities. They can be negative, bigger than 1, and they don’t add up to 1. We need to turn them into a proper probability distribution (Step 2’s categorical distribution).
+### The softmax formula
+`softmax(zᵢ) = e^(zᵢ) / (e^(z₁) + e^(z₂) + … + e^(zₙ))`
+Two steps:
+- Exponentiate each score: e^z is always positive, so no negatives.
+- Divide by the total: so everything adds up to 1.
+Worked example: scores [2.0, 1.0, 0.1]
+Class	| Score z	| e^z	    | e^z ÷ total
+cat	    | 2.0	    | 7.389	    | 7.389 ÷ 11.212 = 0.659
+dog	    | 1.0	    | 2.718	    | 2.718 ÷ 11.212 = 0.242
+bird	| 0.1	    | 1.105	    | 1.105 ÷ 11.212 = 0.099
+total		        | 11.212	| 1.000
+So the model says “66% cat, 24% dog, 10% bird.”
+Properties:
+- Every output is between 0 and 1, and they always add up to 1.
+- The order is kept: the highest score always gets the highest probability.
+- e^z exaggerates differences: a score 1 higher means about 2.7× more probability. That’s why it’s called “soft” max: it leans strongly toward the biggest score without completely ignoring the others.
+### The overflow problem and the “subtract the max” trick
+e^z grows extremely fast. With scores like [1000, 1001, 1002], e^1000 is far too big for the computer to store. It becomes inf (infinity), and inf ÷ inf gives nan (“not a number”). This is a classic reason training suddenly shows loss = nan.
+The fix: subtract the largest score from every score first:
+`[1000, 1001, 1002] − 1002 = [−2, −1, 0]`
+Now the biggest exponent is e⁰ = 1, so nothing can overflow. And the answer is exactly the same, because subtracting a constant c from every score multiplies the top and bottom of the fraction by the same e^(−c), which cancels out:
+`e^(zᵢ − c) / Σ e^(zⱼ − c) = (e^(zᵢ) · e^(−c)) / (Σ e^(zⱼ) · e^(−c)) = e^(zᵢ) / Σ e^(zⱼ)`
+### Log-softmax
+Remember Step 6: training uses −log(probability of the correct class). Instead of computing softmax and then taking the log (which can give log(0) = −infinity for tiny probabilities), libraries compute log-softmax directly in one stable step:
+`log_softmax(zᵢ) = (zᵢ − max) − log(Σ e^(zⱼ − max))`
+PyTorch’s cross-entropy loss uses this internally.
+### The code (plain functions)
+```python
+import math
+
+def softmax(scores):
+    biggest = max(scores)
+    exps = []
+    for s in scores:
+        exps.append(math.exp(s - biggest))
+    total = sum(exps)
+    result = []
+    for e in exps:
+        result.append(e / total)
+    return result
+
+print(softmax([2.0, 1.0, 0.1]))
+print(softmax([1000, 1001, 1002]))
+```
+### Why this matters to AI
+- Every classifier ends with softmax to produce class probabilities.
+- Language models apply softmax over their whole vocabulary to choose the next word.
+- Attention in transformers uses softmax to decide how much each word should focus on every other word.
+- Temperature (Lesson 1.16) divides the scores before softmax to make outputs more or less random.
