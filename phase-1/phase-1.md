@@ -548,3 +548,73 @@ print(softmax([1000, 1001, 1002]))
 - Language models apply softmax over their whole vocabulary to choose the next word.
 - Attention in transformers uses softmax to decide how much each word should focus on every other word.
 - Temperature (Lesson 1.16) divides the scores before softmax to make outputs more or less random.
+
+# Tuesday. 24th November; 2026
+## sampling and the Central Limit Theorem.
+### Sampling
+Sampling means generating random values that follow a distribution. It's how a language model picks its next word, and how we can check our formulas by simulation. 
+#### The building block: random.random()
+`import random`
+random.random() gives a random decimal between 0 and 1, with every value equally likely (a uniform distribution). Every other kind of sampling is built from it.
+#### Sampling a Bernoulli (a biased coin)
+To get "1" with probability p: draw a random number, and if it's below p, return 1. Since the number is uniform on 0 to 1, it lands below 0.8 exactly 80% of the time.
+```python
+def sample_bernoulli(p, n):
+    samples = []
+    for i in range(n):
+        if random.random() < p:
+            samples.append(1)
+        else:
+            samples.append(0)
+    return samples
+```
+#### Sampling a categorical (choosing one of several options)
+For probabilities [0.7, 0.2, 0.1] (cat, dog, bird), imagine the line from 0 to 1 cut into pieces of those sizes:
+`0 ────── cat ────── 0.7 ── dog ── 0.9 ─ bird ─ 1.0`
+Draw a random number and see which piece it lands in. The pieces end at the running totals: 0.7, 0.9, 1.0.
+```python 
+def sample_categorical(probs, n):
+    cumulative = []
+    total = 0
+    for p in probs:
+        total += p
+        cumulative.append(total)     # [0.7, 0.9, 1.0]
+
+    samples = []
+    for i in range(n):
+        r = random.random()
+        for j in range(len(cumulative)):
+            if r <= cumulative[j]:
+                samples.append(j)    # j = which option was chosen
+                break                # stop at the first piece it fits in
+    return samples
+```
+break exits the inner loop as soon as the right piece is found. This is the same idea a language model uses to pick the next word from its softmax probabilities.
+#### The Central Limit Theorem, by simulation
+This averages n_dice dice rolls, and repeats that many times:
+```python
+def average(values):
+    return sum(values) / len(values)
+
+def clt_demo(n_dice, n_averages):
+    averages = []
+    for t in range(n_averages):
+        rolls = []
+        for i in range(n_dice):
+            rolls.append(random.randint(1, 6))
+        averages.append(average(rolls))
+    return averages
+```
+#### Testing it
+```python
+flips = sample_bernoulli(0.8, 10000)
+print(average(flips))
+
+animals = sample_categorical([0.7, 0.2, 0.1], 10000)
+print(animals.count(0) / 10000, animals.count(1) / 10000, animals.count(2) / 10000)
+
+avg1 = clt_demo(1, 5000)
+avg30 = clt_demo(30, 5000)
+print(average(avg1), average(avg30))
+```
+.count(x) counts how many times x appears in a list.
