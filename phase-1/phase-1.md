@@ -618,3 +618,49 @@ avg30 = clt_demo(30, 5000)
 print(average(avg1), average(avg30))
 ```
 .count(x) counts how many times x appears in a list.
+
+# Thursday. 26th November; 2026
+## Bayes' theorem
+### The puzzle
+A disease affects 1 in 10,000 people. A test for it is 99% accurate: it catches 99% of sick people, and wrongly flags only 1% of healthy people. You test positive. What's the chance you actually have the disease?
+Most people guess 99%. The real answer is under 1%. Bayes' theorem explains why.
+### Where the formula comes from
+From 1.06, conditional probability works in both directions:
+```python
+P(A | B) = P(A and B) / P(B)
+P(B | A) = P(A and B) / P(A)
+```
+Both share P(A and B). From the second line, P(A and B) = P(B | A) × P(A). Substitute that into the first line:
+`P(A | B) = P(B | A) × P(A) / P(B)`
+That's Bayes' theorem. It lets you flip a conditional probability: if you know P(positive | sick), you can work out P(sick | positive), which is the one you actually care about.
+### The four parts
+Part	| Name	| Meaning in the medical example
+P(A)	| Prior	| Your belief before the evidence: how common the disease is (1 in 10,000)
+P(B | A)	| Likelihood	| How likely the evidence is if A is true: P(positive | sick) = 0.99
+P(B)	| Evidence	| How likely the evidence is overall, from everyone: P(positive)
+P(A | B)	| Posterior	| Your updated belief after the evidence: P(sick | positive)
+In words: posterior = likelihood × prior ÷ evidence.
+### Finding the evidence term
+P(positive) counts every way of testing positive: sick people who test positive, plus healthy people who are wrongly flagged:
+```p
+P(positive) = P(pos | sick) × P(sick) + P(pos | healthy) × P(healthy)
+            = 0.99 × 0.0001 + 0.01 × 0.9999
+            = 0.000099 + 0.009999
+            = 0.010098
+```
+This is called the law of total probability: add up the probability of the evidence across every possibility. It's the same "sum across the row" idea as the marginals.
+### Solving the puzzle
+`P(sick | positive) = 0.99 × 0.0001 / 0.010098 ≈ 0.0098 ≈ 0.98%`
+### Why it's so low: count real people
+Formulas can hide the intuition, so picture 1,000,000 people taking the test:
+	| Test positive	| Test negative	| Total
+Sick	| 99	| 1	| 100
+Healthy	| 9,999	| 989,901	| 999,900
+Total	| 10,098	| 989,902	| 1,000,000
+Of the 10,098 positive results, only 99 are actually sick: 99 ÷ 10,098 ≈ 0.98%.
+The test is good, but the disease is so rare that healthy people vastly outnumber sick ones. Even a 1% false-alarm rate, applied to almost a million healthy people, produces far more false positives than true ones. The prior matters enormously. This is why screening programmes use a second, confirmation test after a positive result.
+### Why this matters to AI.
+- Classifiers: a model's raw score has to be interpreted against how common each class is. A fraud detector that's "99% accurate" can still flag mostly innocent transactions if fraud is rare.
+- Spam filters use Bayes to update "is this spam?" based on the words in an email.
+- Naive Bayes is a real, fast text classifier built directly on this formula.
+- Priors appear in training as regularisation.
