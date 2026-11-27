@@ -664,3 +664,55 @@ The test is good, but the disease is so rare that healthy people vastly outnumbe
 - Spam filters use Bayes to update "is this spam?" based on the words in an email.
 - Naive Bayes is a real, fast text classifier built directly on this formula.
 - Priors appear in training as regularisation.
+
+
+# Friday. 27th November; 2026
+## The spam filter and the evidence term
+### The question
+An email arrives containing the word "lottery". Is it spam?What we know from past emails:
+Fact	| Value	Z Which part of Bayes
+30% of all email is spam	Z P(spam) = 0.3	| Prior
+5% of spam emails contain "lottery"	Z P("lottery" | spam) = 0.05	Z Likelihood
+0.1% of normal emails contain "lottery"	| P("lottery" | not spam) = 0.001	| Needed for the evidence
+We want the posterior: P(spam | "lottery").
+### Step one: the evidence
+How often does "lottery" appear at all? Add up both ways it can happen (the law of total probability from Step 1):
+```python
+P("lottery") = P("lottery" | spam) × P(spam) + P("lottery" | not spam) × P(not spam)
+             = 0.05 × 0.3 + 0.001 × 0.7
+             = 0.015 + 0.0007
+             = 0.0157
+
+```
+### Step two: Bayes
+```python
+P(spam | "lottery") = 0.05 × 0.3 / 0.0157
+                    = 0.015 / 0.0157
+                    ≈ 0.955, about 95.5%
+```
+One word moved our belief from 30% → 95.5%.
+### Why this time the evidence wins
+In the medical test, a positive result barely moved the belief (0.01% → about 1%). Here one word moves it enormously. The difference is how much more common the evidence is in one group than the other:
+Example	| P(evidence | yes) ÷ P(evidence | no)	| Prior	| Posterior
+Medical test	| 0.99 ÷ 0.01 = 99× more likely if sick	| 0.01% (very rare)	| about 1%
+"lottery"	| 0.05 ÷ 0.001 = 50× more likely in spam	| 30% (common)	| about 95.5%
+The evidence is strong in both cases. The difference is the prior. Spam is common, so strong evidence quickly tips the balance. The disease is so rare that even strong evidence can't overcome it in one test.
+The rule to remember: the posterior depends on both how strong the evidence is and how likely the thing was to begin with.
+### The same thing as code
+This function works for any yes/no Bayes problem:
+```python
+def bayes(prior, likelihood, false_positive_rate):
+    evidence = likelihood * prior + false_positive_rate * (1 - prior)
+    posterior = likelihood * prior / evidence
+    return posterior
+
+print(bayes(0.0001, 0.99, 0.01))    # medical test
+print(bayes(0.3, 0.05, 0.001))      # "lottery"
+```
+- prior = p(A), the starting belief
+- likelihood = p(evidence|A)
+- false_positive_rate = p(evidence | not A)
+- 1 - prior = p(not A), the "not" rule from 1.06
+You should get about 0.0098 and 0.9554, matching both examples.
+### What about many words?
+A real email has hundreds of words, not one. Spam filters combine the evidence from all of them. Doing that exactly is very hard, so the common shortcut is to assume the words are independent, which lets us simply multiply their likelihoods. That shortcut is called Naive Bayes, and it's Step 3.
